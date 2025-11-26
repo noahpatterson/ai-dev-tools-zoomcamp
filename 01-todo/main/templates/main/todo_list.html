@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Todo List</title>
+</head>
+
+<body>
+  <header>
+    {% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}! |
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit">Logout</button>
+    </form>
+    </p>
+    {% else %}
+    <p><a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
+  </header>
+  <h1>Todo List</h1>
+  <ul>
+    {% for todo in todos %}
+    <li>
+      <a href="{% url 'todo_update' todo.pk %}">{{ todo.title }}</a>
+      <form action="{% url 'todo_delete' todo.pk %}" method="post" style="display: inline;"
+        onsubmit="return confirm('Are you sure you want to delete this todo?');">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'todo_create' %}">Create New Todo</a>
+</body>
+
+</html>
